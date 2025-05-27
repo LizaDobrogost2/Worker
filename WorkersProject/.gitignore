@@ -1,0 +1,41 @@
+# .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Rider
+.idea/
+
+# ASP.NET Secrets
+secrets.json
+
+# Logs
+*.log
+
+# EF Core Migrations snapshot files
+*MigrationsSnapshot.cs
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Docker
+**/publish/
+docker-compose.override.yml
+
+# User secrets
+**/Properties/launchSettings.json
+
+# Node modules (if front-end is present)
+node_modules/
+
+# Environment variables
+.env
+.env.*
