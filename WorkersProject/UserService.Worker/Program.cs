@@ -1,7 +1,6 @@
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Shared.Contracts;
+using Microsoft.EntityFrameworkCore;
+using UserService.Worker.Data;
 
 Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -23,6 +22,8 @@ Host.CreateDefaultBuilder(args)
                 });
             });
         });
+        services.AddDbContext<UsersDbContext>(options =>
+            options.UseNpgsql(context.Configuration.GetConnectionString("Postgres")));
     })
     .Build()
     .Run();

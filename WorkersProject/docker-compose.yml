@@ -2,18 +2,29 @@ services:
     rabbitmq:
         image: rabbitmq:3-management
         ports:
-            - "5672:5672" # for RabbitMQ connection
-            - "15672:15672" # for RabbitMQ web UI
+            - "5672:5672"
+            - "15672:15672"
         environment:
             RABBITMQ_DEFAULT_USER: guest
             RABBITMQ_DEFAULT_PASS: guest
-
+    postgres:
+        image: postgres:15
+        restart: always
+        environment:
+            POSTGRES_USER: user
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: usersdb
+        ports:
+            - "5432:5432"
+        volumes:
+            - pgdata:/var/lib/postgresql/data
     usergatewayapi:
         build:
             context: .
             dockerfile: UserGateway.Api/Dockerfile
         depends_on:
             - rabbitmq
+            - postgres
         ports:
             - "5000:80"
         environment:
@@ -25,3 +36,7 @@ services:
             dockerfile: UserService.Worker/Dockerfile
         depends_on:
             - rabbitmq
+            - postgres
+
+volumes:
+  pgdata:

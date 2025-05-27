@@ -1,3 +1,3 @@
 ﻿namespace Shared.Contracts;
 
-public record RegisterUser(string Username, string Email);
+public record RegisterUser(string Name, string Email);

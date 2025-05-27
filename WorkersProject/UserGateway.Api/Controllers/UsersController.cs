@@ -20,7 +20,7 @@ public class UsersController : ControllerBase
     {
         await _publishEndpoint.Publish(user);
 
-        Console.WriteLine($"📤 Published: {user.Username} ({user.Email})");
+        Console.WriteLine($"📤 Published: {user.Name} ({user.Email})");
 
         return Accepted();
     }

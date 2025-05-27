@@ -1,12 +1,23 @@
 ﻿using MassTransit;
 using Shared.Contracts;
+using UserService.Worker.Data;
+using UserService.Worker.Models;
 
 public class RegisterUserConsumer : IConsumer<RegisterUser>
 {
-    public Task Consume(ConsumeContext<RegisterUser> context)
+    private readonly UsersDbContext _db;
+
+    public RegisterUserConsumer(UsersDbContext db)
     {
-        var message = context.Message;
-        Console.WriteLine($"User registered: {message.Username}, {message.Email}");
-        return Task.CompletedTask;
+        _db = db;
+    }
+
+    public async Task Consume(ConsumeContext<RegisterUser> context)
+    {
+        var msg = context.Message;
+        var user = new User { Name = msg.Name, Email = msg.Email };
+
+        _db.Users.Add(user);
+        await _db.SaveChangesAsync();
     }
 }
