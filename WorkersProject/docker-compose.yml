@@ -1,0 +1,27 @@
+services:
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+            - "5672:5672" # for RabbitMQ connection
+            - "15672:15672" # for RabbitMQ web UI
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+
+    usergatewayapi:
+        build:
+            context: .
+            dockerfile: UserGateway.Api/Dockerfile
+        depends_on:
+            - rabbitmq
+        ports:
+            - "5000:80"
+        environment:
+            - ASPNETCORE_HTTP_PORTS=80
+
+    userserviceworker:
+        build:
+            context: .
+            dockerfile: UserService.Worker/Dockerfile
+        depends_on:
+            - rabbitmq
