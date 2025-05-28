@@ -1,6 +1,7 @@
 ﻿using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Contracts;
+using Shared.Contracts.Models;
 
 namespace UserGateway.Api.Controllers;
 
@@ -8,20 +9,18 @@ namespace UserGateway.Api.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IRequestClient<GetAllUsersQuery> _client;
 
-    public UsersController(IPublishEndpoint publishEndpoint)
+    public UsersController(IRequestClient<GetAllUsersQuery> client)
     {
-        _publishEndpoint = publishEndpoint;
+        _client = client;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterUser user)
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetAll()
     {
-        await _publishEndpoint.Publish(user);
-
-        Console.WriteLine($"📤 Published: {user.Name} ({user.Email})");
-
-        return Accepted();
+        var response = await _client.GetResponse<GetAllUsersResponse>(new GetAllUsersQuery());
+        return Ok(response.Message.Users);
     }
 }

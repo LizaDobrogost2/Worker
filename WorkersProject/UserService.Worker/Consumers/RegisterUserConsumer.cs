@@ -15,7 +15,7 @@ public class RegisterUserConsumer : IConsumer<RegisterUser>
     public async Task Consume(ConsumeContext<RegisterUser> context)
     {
         var msg = context.Message;
-        var user = new User { Name = msg.Name, Email = msg.Email };
+        var user = new UserEntity { Name = msg.Name, Email = msg.Email };
 
         _db.Users.Add(user);
         await _db.SaveChangesAsync();

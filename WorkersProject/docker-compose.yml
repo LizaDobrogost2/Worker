@@ -13,11 +13,24 @@ services:
         environment:
             POSTGRES_USER: user
             POSTGRES_PASSWORD: password
-            POSTGRES_DB: usersdb
         ports:
             - "5432:5432"
         volumes:
             - pgdata:/var/lib/postgresql/data
+            - ./init-db:/docker-entrypoint-initdb.d
+
+    identityservice:
+        build:
+            context: .
+            dockerfile: IdentityService.Api/Dockerfile
+        depends_on:
+            - rabbitmq
+            - postgres
+        ports:
+            - "7000:80"
+        environment:
+            - ASPNETCORE_HTTP_PORTS=80
+
     usergatewayapi:
         build:
             context: .
